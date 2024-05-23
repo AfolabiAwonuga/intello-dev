@@ -12,3 +12,109 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+// OTHERS
+
+model Item {
+  id         Int        @id @default(autoincrement())
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     String     @map("user_id")
+  question   Question   @relation(fields: [questionId], references: [id])
+  questionId Int        @unique @map("question_id")
+  resources  Resource[]
+}
+
+model Question {
+  id         Int    @id @default(autoincrement())
+  topic      String
+  question   String
+  answer     String
+  difficulty String
+  item       Item?
+}
+
+model Resource {
+  id         Int    @id @default(autoincrement())
+  questionId String
+  url        String
+  item       Item?  @relation(fields: [itemId], references: [id])
+  itemId     Int?   @map("item_id")
+}
+
+// model Performance {
+//   id              String @id @default(cuid())
+//   userId          String
+//   questionsSolved Int
+//   successRate     Float
+//   topicsCovered   String
+//   session         Int
+// }
+
+model Note {
+  id      Int    @id @default(autoincrement())
+  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId  String @map("user_id")
+  name    String
+  content String
+}
+
+model Issue {
+  id          Int    @id @default(autoincrement())
+  user        User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String @map("user_id")
+  description String
+}
+
+//  AUTH
+model Account {
+  id                String  @id @default(cuid())
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId            String  @map("user_id")
+  type              String
+  provider          String
+  providerAccountId String  @map("provider_account_id")
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique @map("session_token")
+  userId       String   @map("user_id")
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime? @map("email_verified")
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
+  items         Item[]
+  notes         Note[]
+  issues        Issue[]
+
+  @@map("users")
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verificationtokens")
+}
