@@ -15,7 +15,7 @@ interface Props {
 const SideBarMain = ({ sidebaritems }: Props) => {
   // const pathname = usePathname();
   // {pathname == link.href ? "secondary" : "ghost"}
-  const [isCollapsed, setCollapsed] = useState<boolean>(false);
+  const [isCollapsed, setCollapsed] = useState<boolean>(true);
   const handleClick = () => {
     setCollapsed((prev) => !prev);
   };
