@@ -1,10 +1,10 @@
-import Image from "next/image";
-import Link from "next/link";
-
 export default function Home() {
   return (
-    <div>
-      <Link href="api/auth/signin">Sign in</Link>
-    </div>
+    <>
+      {/* <span className="font-bold text-4xl">Help</span>
+
+      <div className="border-dashed border border-zinc-500 w-full h-12 rounded-lg"></div>
+      <div className="border-dashed border border-zinc-500 w-full h-64 rounded-lg"></div> */}
+    </>
   );
 }
