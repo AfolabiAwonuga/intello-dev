@@ -9,10 +9,11 @@ import { CircleChevronLeft, CircleChevronRight } from "lucide-react";
 import { Separator } from "./ui/separator";
 
 interface Props {
-  sidebaritems: SideBarItems;
+  mainitems: SideBarItems;
+  lockeritems: SideBarItems;
 }
 
-const SideBarMain = ({ sidebaritems }: Props) => {
+const SideBarMain = ({ mainitems, lockeritems }: Props) => {
   // const pathname = usePathname();
   // {pathname == link.href ? "secondary" : "ghost"}
   const [isCollapsed, setCollapsed] = useState<boolean>(true);
@@ -38,7 +39,7 @@ const SideBarMain = ({ sidebaritems }: Props) => {
           )}
         </button>
         <div className="flex justify-between items-center w-full p-[12px]">
-          <div className="flex gap-1.5 items-cente">
+          <div className="flex gap-1.5 items-center">
             <Avatar className="h-6 w-6">
               <AvatarImage src="https://github.com/afolabiawonuga.png" />
               {/* <AvatarFallback>Nuga</AvatarFallback> */}
@@ -53,11 +54,14 @@ const SideBarMain = ({ sidebaritems }: Props) => {
             )}
           </div>
         </div>
-        <Separator className="bg-[#414749]/15" />
+        <Separator className="bg-[#414749]/15 mb-[15px]" />
         <div className="mt-[5px]">
           <div className="flex flex-col gap-1 w-full">
-            {sidebaritems.links.map((link, idx) => (
-              <Link key={idx} href={link.href}>
+            {!isCollapsed && (
+              <p className="text-[#ffff]/15 px-3 test-[12px]">Main</p>
+            )}
+            {mainitems.links.map((link, idx) => (
+              <Link key={idx} href={link.href!}>
                 <SideBarButton
                   variant="ghost"
                   icon={link.icon}
@@ -67,6 +71,22 @@ const SideBarMain = ({ sidebaritems }: Props) => {
                   {/* {link.label} */}
                 </SideBarButton>
               </Link>
+            ))}
+          </div>
+          <Separator className="bg-[#414749]/15 mb-[15px]" />
+          <div className="flex flex-col gap-1 w-full">
+            {!isCollapsed && (
+              <p className="text-[#ffff]/15 px-3 test-[12px]">Locker</p>
+            )}
+            {lockeritems.links.map((link, idx) => (
+              <SideBarButton
+                variant="ghost"
+                icon={link.icon}
+                className={"w-full"}
+              >
+                {!isCollapsed && link.label}
+                {/* {link.label} */}
+              </SideBarButton>
             ))}
           </div>
         </div>

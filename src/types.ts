@@ -5,7 +5,7 @@ import { ReactNode } from "react";
 export interface SideBarItems {
     links: Array<{
         label: string;
-        href: string;
+        href?: string;
         icon: LucideIcon
     }>
     extras?: ReactNode

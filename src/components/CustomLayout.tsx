@@ -3,7 +3,7 @@ import React from "react";
 import Link from "next/link";
 import SideBarButton from "./SideBarButton";
 import { usePathname } from "next/navigation";
-import { SIDEBAR_ITEMS } from "@/constants";
+import { MAIN_ITEMS, LOCKER_ITEMS } from "@/constants";
 import SideBarMain from "./SideBarMain";
 
 const CustomLayout = ({
@@ -13,7 +13,7 @@ const CustomLayout = ({
 }>) => {
   return (
     <div className="grid grid-cols-[200px_1fr] grid-auto-columns:auto">
-      <SideBarMain sidebaritems={SIDEBAR_ITEMS} />
+      <SideBarMain mainitems={MAIN_ITEMS} lockeritems={LOCKER_ITEMS} />
       {children}
     </div>
   );

@@ -1,33 +1,16 @@
 "use client";
 
-import {
-  NavigationMenu,
-  NavigationMenuList,
-  NavigationMenuItem,
-  NavigationMenuTrigger,
-  NavigationMenuContent,
-  NavigationMenuLink,
-} from "@radix-ui/react-navigation-menu";
-import { Circle } from "lucide-react";
+import { Ellipsis, Plus } from "lucide-react";
 import React from "react";
 
 const NavBarThree = () => {
   return (
-    <div className="flex justify-center">
-      <NavigationMenu>
-        <NavigationMenuList className="flex flex-row space-x-4">
-          <NavigationMenuItem>
-            <NavigationMenuTrigger className="text-xs">
-              sol agent
-            </NavigationMenuTrigger>
-          </NavigationMenuItem>
-          <NavigationMenuItem>
-            <NavigationMenuTrigger className="text-xs">
-              rag agent
-            </NavigationMenuTrigger>
-          </NavigationMenuItem>
-        </NavigationMenuList>
-      </NavigationMenu>
+    <div className="justify-between flex flex-row mx-5 mt-2">
+      <span>1</span>
+      <div className="flex flex-row space-x-3">
+        <Plus strokeWidth={1.5} size={18} />
+        <Ellipsis strokeWidth={1} size={18} />
+      </div>
     </div>
   );
 };

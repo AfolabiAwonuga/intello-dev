@@ -18,11 +18,11 @@ const SideBarButton = ({
   return (
     <Button
       variant="ghost"
-      className={cn("gap-2 justify-start", className)}
+      className={cn("gap-2 justify-start mx-[5px]", className)}
       {...props}
       size="sm"
     >
-      <Icon color="#ffff" size={18} />
+      <Icon color="#ffff" size={18} strokeWidth={1.5} />
       <span className="text-[#ffff]">{children}</span>
     </Button>
   );
