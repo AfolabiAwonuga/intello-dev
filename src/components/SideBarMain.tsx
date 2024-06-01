@@ -23,7 +23,7 @@ const SideBarMain = ({ mainitems, lockeritems }: Props) => {
   return (
     <>
       <aside
-        className={`relative border m-[5px] rounded-[10px] bg-[#292929] transition-all duration-300 ${
+        className={`relative border rounded-[10px] bg-[#292929] transition-all duration-300 ${
           isCollapsed ? "col-span-1 w-[50px]" : "col-span-1"
         }`}
         data-collapse={isCollapsed}
@@ -42,7 +42,6 @@ const SideBarMain = ({ mainitems, lockeritems }: Props) => {
           <div className="flex gap-1.5 items-center">
             <Avatar className="h-6 w-6">
               <AvatarImage src="https://github.com/afolabiawonuga.png" />
-              {/* <AvatarFallback>Nuga</AvatarFallback> */}
             </Avatar>
             {!isCollapsed && (
               <div className="flex flex-col">
@@ -68,7 +67,6 @@ const SideBarMain = ({ mainitems, lockeritems }: Props) => {
                   className={"w-full"}
                 >
                   {!isCollapsed && link.label}
-                  {/* {link.label} */}
                 </SideBarButton>
               </Link>
             ))}
@@ -79,29 +77,20 @@ const SideBarMain = ({ mainitems, lockeritems }: Props) => {
               <p className="text-[#ffff]/15 px-3 test-[12px]">Locker</p>
             )}
             {lockeritems.links.map((link, idx) => (
-              <SideBarButton
-                variant="ghost"
-                icon={link.icon}
-                className={"w-full"}
-              >
-                {!isCollapsed && link.label}
-                {/* {link.label} */}
-              </SideBarButton>
+              <Link key={idx} href={link.href!}>
+                <SideBarButton
+                  variant="ghost"
+                  icon={link.icon}
+                  className={"w-full"}
+                >
+                  {!isCollapsed && link.label}
+                </SideBarButton>
+              </Link>
             ))}
           </div>
         </div>
         <div className="absolute left-0 top-3 px-3">
-          {/* <Separator className="absolute -bottom-3 left-0 bg-[#414749]" /> */}
-          <div className="flex justify-between items-center w-full">
-            {/* <SquareMenu size={18} color="#7d8081" /> */}
-            {/* <div className="flex gap-2">
-                  <Avatar className="h-5 w-5">
-                    <AvatarImage src="https://github.com/afolabiawonuga.png" />
-                    <AvatarFallback>Nuga</AvatarFallback>
-                  </Avatar>
-                  <span className="text-[#7d8081]">Nuga</span>
-                </div> */}
-          </div>
+          <div className="flex justify-between items-center w-full"></div>
         </div>
       </aside>
     </>

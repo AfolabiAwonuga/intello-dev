@@ -13,7 +13,6 @@ const DashboardLayout = ({
 }>) => {
   return (
     <div className="grid grid-cols-[auto_1fr]">
-      {/* <NavBar /> */}
       <SideBarMain mainitems={MAIN_ITEMS} lockeritems={LOCKER_ITEMS} />
       {children}
     </div>

@@ -17,7 +17,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html
+      lang="en"
+      className="scrollbar-thumb-[#292929] scrollbar-track-slate-700/0"
+    >
       <body className={`${robotoMono.className}`}>
         {/* <ThemeProvider
           attribute="class"

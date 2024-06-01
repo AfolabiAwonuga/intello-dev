@@ -28,11 +28,11 @@ export const MAIN_ITEMS: SideBarItems = {
 };
 export const LOCKER_ITEMS: SideBarItems = {
   links: [
-    {
-      label: "API key",
-      icon: KeySquare,
-      // href: "/performance",
-    },
+    // {
+    //   label: "API key",
+    //   icon: KeySquare,
+    //   // href: "/performance",
+    // },
     {
       label: "Items",
       href: "/items",
