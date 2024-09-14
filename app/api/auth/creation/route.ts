@@ -29,5 +29,5 @@ export async function GET() {
         })
     }
 
-    return NextResponse.redirect("https://fg4ggg804cokkskk4gscwc4o.128.140.36.77.sslip.io/dashboard")
+    return NextResponse.redirect(process.env.KINDE_POST_LOGOUT_REDIRECT_URL || "")
 }

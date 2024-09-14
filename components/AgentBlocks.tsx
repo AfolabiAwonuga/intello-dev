@@ -420,7 +420,7 @@ export default function AgentBlocks(props: { imageUrl: string }) {
               </CardDescription>
             </CardHeader>
             <CardContent className="pb-0">
-              <ScrollArea className="h-full max-h-[580px] overflow-y-auto">
+              <ScrollArea className="h-full max-h-[500px] overflow-y-auto">
                 {messages.map((message) => (
                   <motion.div
                     key={message.id}
