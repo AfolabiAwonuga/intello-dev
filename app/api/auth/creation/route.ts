@@ -29,5 +29,5 @@ export async function GET() {
         })
     }
 
-    return NextResponse.redirect("http://localhost:3000/dashboard")
+    return NextResponse.redirect("https://fg4ggg804cokkskk4gscwc4o.128.140.36.77.sslip.io/dashboard")
 }
