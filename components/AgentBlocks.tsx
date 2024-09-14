@@ -1,6 +1,5 @@
 "use client";
 
-import { Chat } from "@/components/Chat";
 import NavBarThree from "@/components/NavBarThree";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "next-themes";
