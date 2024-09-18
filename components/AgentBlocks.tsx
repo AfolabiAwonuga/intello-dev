@@ -69,6 +69,7 @@ export default function AgentBlocks(props: { imageUrl: string }) {
   const [topic, setTopic] = useState("");
   const [questionCount, setQuestionCount] = useState(0);
   const [selectedChoice, setSelectedChoice] = useState<string | null>(null);
+  const messagesRef = useRef<HTMLDivElement>(null);
 
   const {
     messages,
@@ -106,6 +107,15 @@ export default function AgentBlocks(props: { imageUrl: string }) {
       setTextColor(theme === "dark" ? "text-white" : "text-black");
     }
   }, [theme]);
+
+  const scrollToBottom = () => {
+    messagesRef.current?.scrollIntoView(false);
+  };
+
+  // AUTO SCROLL ON NEW MESSAGES IN SOL AGENT BLOCK
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
   return (
     <>
@@ -419,60 +429,66 @@ export default function AgentBlocks(props: { imageUrl: string }) {
                 Dolorem */}
               </CardDescription>
             </CardHeader>
-            <CardContent className="pb-0">
-              <ScrollArea className="h-full max-h-[500px] overflow-y-auto">
-                {messages.map((message) => (
-                  <motion.div
-                    key={message.id}
-                    layout
-                    initial={{ opacity: 0, scale: 1, y: 50, x: 0 }}
-                    animate={{ opacity: 1, scale: 1, y: 0, x: 0 }}
-                    exit={{ opacity: 0, scale: 1, y: 1, x: 0 }}
-                    // transition={{
-                    //   opacity: { duration: 0.1 },
-                    //   layout: {
-                    //     type: "spring",
-                    //     bounce: 0.3,
-                    //     duration: messages.indexOf(message) * 0.05 + 0.2,
-                    //   },
-                    // }}
-                    style={{
-                      originX: 0.5,
-                      originY: 0.5,
-                    }}
-                    className={cn(
-                      "flex flex-col gap-2 py-16 pt-0 pr-6 whitespace-pre-wrap",
-                      message.role === "user" ? "items-end" : "items-start"
-                    )}
-                  >
-                    <div key={message.id} className="flex gap-2">
-                      {message.role !== "user" && (
-                        <>
-                          <span
-                            className={`flex ${blockFill} p-2 rounded-[10px] max-w-lg text-sm border border-black`}
-                          >
-                            <p>{message.content}</p>
-                          </span>
-                        </>
+            <CardContent className="pb-0 ">
+              {/* ScrollArea/ */}
+              <ScrollArea
+                // h-full max-h-[500px]
+                className="h-[500px] overflow-y-auto"
+              >
+                <div ref={messagesRef}>
+                  {messages.map((message) => (
+                    <motion.div
+                      key={message.id}
+                      layout
+                      initial={{ opacity: 0, scale: 1, y: 50, x: 0 }}
+                      animate={{ opacity: 1, scale: 1, y: 0, x: 0 }}
+                      exit={{ opacity: 0, scale: 1, y: 1, x: 0 }}
+                      // transition={{
+                      //   opacity: { duration: 0.1 },
+                      //   layout: {
+                      //     type: "spring",
+                      //     bounce: 0.3,
+                      //     duration: messages.indexOf(message) * 0.05 + 0.2,
+                      //   },
+                      // }}
+                      style={{
+                        originX: 0.5,
+                        originY: 0.5,
+                      }}
+                      className={cn(
+                        "flex flex-col gap-2 py-16 pt-0 pr-6 whitespace-pre-wrap",
+                        message.role === "user" ? "items-end" : "items-start"
                       )}
-                      {message.role === "user" && (
-                        <>
-                          <span
-                            className={`flex ${blockFill} p-2 rounded-[10px] max-w-md text-sm border border-black`}
-                          >
-                            <p>{message.content}</p>
-                          </span>
-                          <Avatar
-                            className={`h-9 w-9 flex justify-center items-center  border ${navBorders}`}
-                          >
-                            <AvatarFallback>DF</AvatarFallback>
-                            <AvatarImage src={imageUrl} />
-                          </Avatar>
-                        </>
-                      )}
-                    </div>
-                  </motion.div>
-                ))}
+                    >
+                      <div key={message.id} className="flex gap-2">
+                        {message.role !== "user" && (
+                          <>
+                            <span
+                              className={`flex ${blockFill} p-2 rounded-[10px] max-w-lg text-sm border border-black`}
+                            >
+                              <p>{message.content}</p>
+                            </span>
+                          </>
+                        )}
+                        {message.role === "user" && (
+                          <>
+                            <span
+                              className={`flex ${blockFill} p-2 rounded-[10px] max-w-md text-sm border border-black`}
+                            >
+                              <p>{message.content}</p>
+                            </span>
+                            <Avatar
+                              className={`h-9 w-9 flex justify-center items-center  border ${navBorders}`}
+                            >
+                              <AvatarFallback>DF</AvatarFallback>
+                              <AvatarImage src={imageUrl} />
+                            </Avatar>
+                          </>
+                        )}
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
               </ScrollArea>
             </CardContent>
             <CardFooter className="">
