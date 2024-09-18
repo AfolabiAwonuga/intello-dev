@@ -3,14 +3,7 @@
 import NavBarThree from "@/components/NavBarThree";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "next-themes";
-import {
-  FormEvent,
-  LegacyRef,
-  MutableRefObject,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Card,
   CardContent,
@@ -19,7 +12,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import ChatBottomBar from "@/components/ChatBottomBar";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { motion } from "framer-motion";
