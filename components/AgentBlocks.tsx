@@ -41,6 +41,8 @@ import Link from "next/link";
 import { ArrowUp } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import toast, { Toaster } from "react-hot-toast";
+import Markdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 interface QuizResponse {
   question: string;
@@ -458,7 +460,13 @@ export default function AgentBlocks(props: { imageUrl: string }) {
                             <span
                               className={`flex ${blockFill} p-2 rounded-[10px] max-w-lg text-sm border border-black`}
                             >
-                              <p>{message.content}</p>
+                              <Markdown
+                                remarkPlugins={[remarkGfm]}
+                                className="p"
+                              >
+                                {message.content}
+                              </Markdown>
+                              {/* <p>{message.content}</p> */}
                             </span>
                           </>
                         )}
