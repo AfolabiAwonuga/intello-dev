@@ -23,7 +23,7 @@ const LandingNav = () => {
   return (
     <AnimatedText
       text="IntelloDev"
-      className={`text-6xl font-bold mb-8 ${textColor}`}
+      className={`text-4xl md:text-6xl font-bold mb-8 ${textColor}`}
     ></AnimatedText>
   );
 };

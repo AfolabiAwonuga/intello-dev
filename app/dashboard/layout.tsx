@@ -1,91 +1,116 @@
 "use client";
 
-import { ReactNode, useEffect, useState } from "react";
-import { CircleChevronLeft, CircleChevronRight } from "lucide-react";
-import { SideBarItems } from "@/types";
-import { ITEMS } from "@/constants";
-import Link from "next/link";
-import SideBarButton from "@/components/SideBarButton";
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import { ReactNode, useState } from "react";
+
+import Aside from "@/components/Aside";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { useTheme } from "next-themes";
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
-  const [collapsed, setCollapsed] = useState(true);
-  const handleClick = () => {
-    setCollapsed((prev) => !prev);
-  };
-
-  const [fillColor, setFillColor] = useState("#ffff");
-  const [navColor, setNavColor] = useState("bg-black");
-
-  const { theme, resolvedTheme } = useTheme();
-
-  useEffect(() => {
-    if (theme === "system") {
-      const systemTheme = window.matchMedia("(prefers-color-scheme: dark)")
-        .matches
-        ? "dark"
-        : "light";
-      setFillColor(systemTheme === "dark" ? "" : "#ffff");
-      setNavColor(systemTheme === "dark" ? "bg-black" : "bg-black");
-    } else {
-      setFillColor(theme === "dark" ? "" : "#ffff");
-      setNavColor(theme === "dark" ? "bg-black" : "bg-black");
-    }
-  }, [theme]);
-
-  // const { theme } = useTheme();
-
-  // const fillColor = theme === "dark" ? "" : "";
-
+  const [navBorders, setNavBorders] = useState("border-black");
   return (
-    <div className="grid grid-cols-[auto_1fr] min-h-screen">
-      <aside
-        className={`relative border rounded-[10px] ${navColor} transition-all duration-300 ${
-          collapsed ? "col-span-1 w-[60px]" : "col-span-1"
-        }`}
-        data-collapse={collapsed}
-      >
-        <button
-          className="flex cursor-pointer justify-center items-center absolute right-0 top-[29px] translate-x-1/2"
-          onClick={handleClick}
-        >
-          {!collapsed ? (
-            <CircleChevronLeft fill={fillColor} strokeWidth={1} size={24} />
-          ) : (
-            <CircleChevronRight fill={fillColor} strokeWidth={1} size={24} />
-          )}
-        </button>
-        <div className="flex flex-col justify-between h-full ">
-          <div className="mt-[10px] flex flex-col gap-1 mx-2  ">
-            {ITEMS.links.map((link, idx) => (
-              <Link key={idx} href={link.href!}>
-                <SideBarButton
-                  variant="ghost"
-                  icon={link.icon}
-                  className={` ${
-                    !collapsed
-                      ? "gap-2 justify-normal w-32"
-                      : "w-full hover:ml-1"
-                  }`}
-                >
-                  {!collapsed && link.label}
-                </SideBarButton>
-              </Link>
-            ))}
-          </div>
-          {/* <Separator className="bg-[#414749]/15 mb-[15px]" /> */}
-          {/* <div className="flex flex-col mx-2 mb-[10px]">
-            <div className="flex justify-between mx-1 pl-1">
-              <Avatar className="border-2 size-7">
-                <AvatarImage src="https://github.com/afolabiawonuga.png" />
-              </Avatar>
-            </div>
-          </div> */}
+    <div className="md:grid md:grid-cols-[auto_1fr] min-h-screen">
+      {/* <nav className="border-2 border-red-600 h-[60px] mx-[10px] rounded-sm ">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+        
+            <Avatar
+              className={`border ${navBorders} h-9 w-9 cursor-pointer ml-1`}
+            >
+              <AvatarFallback>NU</AvatarFallback>
+              <AvatarImage src="https://avatars.githubusercontent.com/u/109032587?v=4" />
+            </Avatar>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="center" side="right">
+            <DropdownMenuItem className={`border  ${navBorders}`}>
+              <LogoutLink>Logout</LogoutLink>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      
+        <div className="flex-1 flex justify-center">
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button variant="outline" className={`border  ${navBorders}`}>
+                Config
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[425px]">
+              <DialogHeader>
+                <DialogTitle>Edit Config</DialogTitle>
+                <DialogDescription>
+                  Make changes to Question Agent&apos;s configuration here.
+                  Click save when you are done.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="grid gap-4 py-4">
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="name" className="text-right">
+                    Field
+                  </Label>
+                  <Input
+                    id="name"
+                    value={field}
+                    onChange={(e) => setField(e.target.value)}
+                    className="col-span-3"
+                  />
+                </div>
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="username" className="text-right">
+                    Topic
+                  </Label>
+                  <Input
+                    id="username"
+                    value={topic}
+                    onChange={(e) => setTopic(e.target.value)}
+                    className="col-span-3"
+                  />
+                </div>
+              </div>
+              <DialogFooter>
+                <DialogTrigger>
+                  <Button
+                    type="submit"
+                    onClick={() => {
+                      if (response) {
+                        setResponse(null);
+                        setQuestionCount(0);
+                      }
+                    }}
+                  >
+                    Save changes
+                  </Button>
+                </DialogTrigger>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </div>
-      </aside>
-      <div className="grid grid-rows-[50px_1fr]">{children}</div>
+      
+        <div className="ml-auto mr-1">
+          <ThemeToggle borderColor={`${navBorders}`} />
+        </div>
+      </nav> */}
+      <Aside />
+      <div className="h-screen grid grid-rows-[50px_1fr]">{children}</div>
     </div>
   );
 }

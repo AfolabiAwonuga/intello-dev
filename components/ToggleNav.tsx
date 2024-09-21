@@ -21,7 +21,7 @@ const ToggleNav = () => {
 
   return (
     <nav className=" ml-[8px] rounded-[10px] h-[50px] flex items-center">
-      <p className="ml-1 text-md">
+      <p className="ml-1 text-sm md:text-md">
         <strong>IntelloDev</strong>
       </p>
       <div className="ml-auto mr-1">
