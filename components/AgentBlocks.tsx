@@ -561,12 +561,12 @@ export default function AgentBlocks(props: { imageUrl: string }) {
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent
-                    className={`border ${navBorders} `}
+                    className={`border ${navBorders}`}
                     align="start"
                     side="top"
                   >
                     <DropdownMenuItem
-                      className={`w-[592px] h-[100px]`}
+                      className={`flex flex-grow max-w-[200px]`}
                       onClick={() => {
                         if (response) {
                           handleOpenDrawer();
