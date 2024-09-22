@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { streamText, convertToCoreMessages,  Message as VercelChatMessage } from 'ai';
 import { ChatOpenAI } from "@langchain/openai";
+// import { ChatGroq } from "@langchain/groq";
 import {
     AIMessage,
     BaseMessage,
@@ -32,18 +33,6 @@ const vercelToLangMessage = (message: VercelChatMessage): BaseMessage => {
 }
 
 const langToVercelMessage = (message: BaseMessage) => {
-    // if (message._getType() === "human") {
-    //     return { content: message.content, role: "user" };
-    //   } else if (message._getType() === "ai") {
-    //     return {
-    //       content: message.content,
-    //       role: "assistant",
-    //       tool_calls: (message as AIMessage).tool_calls,
-    //     };
-    //   } else {
-    //     return { content: message.content, role: message._getType() };
-    //   }
-
     if (message._getType() === "ai") {
       return {content: (message as AIMessage).tool_calls};
     }
@@ -60,43 +49,39 @@ export async function POST(req: NextRequest) {
             )
           .map(vercelToLangMessage);
         const field = body.field
-        // const topic = body.topic || "a random topic"
 
-          // Graph State
-          const GraphState = Annotation.Root({
-              ...MessagesAnnotation.spec,
-              // generatedQuestion: Annotation<typeof generatedQuestionSchema[]>({
-              //     reducer: (state, update) => state.concat(update),
-              // default: () => [],
-              // })
+        // Graph State
+        const GraphState = Annotation.Root({
+            ...MessagesAnnotation.spec,
+
+        })
+        
+        // Tools
+        // const toolNode = new ToolNode()
+        const finalResponseTool = tool(async () => "mocked value", {
+            name: "Response",
+            description: "Always respond to the user using this tool.",
+            schema: generatedQuestionSchema
           })
-          
-          // Tools
-          // const toolNode = new ToolNode()
-          const finalResponseTool = tool(async () => "mocked value", {
-              name: "Response",
-              description: "Always respond to the user using this tool.",
-              schema: generatedQuestionSchema
-            })
-          
-          
-          // Model
-          const llm = new ChatOpenAI({
-              model: "gpt-4o",
-              temperature: 1
-          })
-          
-          
-          const callQagent = async (state: typeof GraphState.State) => {
-              const {messages} = state
-              const systemPrompt = {
-                  role: "system",
-                  content: formatQaPrompt(field)
-              }
-          
-              const llmWithTools = llm.bindTools([finalResponseTool]);      
-              const result = await llmWithTools.invoke([systemPrompt, ...messages]);
-              return { messages: [result] };
+        
+        
+        // Model
+        const llm = new ChatOpenAI({
+            model: "gpt-4o",
+            temperature: 1
+        })
+        
+        
+        const callQagent = async (state: typeof GraphState.State) => {
+            const {messages} = state
+            const systemPrompt = {
+                role: "system",
+                content: formatQaPrompt(field)
+            }
+        
+            const llmWithTools = llm.bindTools([finalResponseTool]);      
+            const result = await llmWithTools.invoke([systemPrompt, ...messages]);
+            return { messages: [result] };
           }
           
           
@@ -111,7 +96,7 @@ export async function POST(req: NextRequest) {
 
           const result = await graph.invoke(
             { messages }
-            // { messages: [new HumanMessage("Start Quiz on deep learninig")] },
+     
           );
           // console.log(result.messages.map(langToVercelMessage).filter(Boolean)[0].content[0].args)
 

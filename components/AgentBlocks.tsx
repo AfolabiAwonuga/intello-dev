@@ -38,7 +38,7 @@ import { LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
 import { Badge } from "@/components/ui/badge";
 import { useChat } from "ai/react";
 import Link from "next/link";
-import { ArrowUp, LogOut } from "lucide-react";
+import { ArrowUp, Loader, Loader2, LogOut } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import toast, { Toaster } from "react-hot-toast";
 import Markdown from "react-markdown";
@@ -82,7 +82,8 @@ export default function AgentBlocks(props: { imageUrl: string }) {
   const [questionCount, setQuestionCount] = useState(0);
   const [selectedChoice, setSelectedChoice] = useState<string | null>(null);
   const messagesRef = useRef<HTMLDivElement>(null);
-  const drawerTriggerRef = useRef<HTMLButtonElement>(null); // Create a ref for the DrawerTrigger
+  const drawerTriggerRef = useRef<HTMLButtonElement>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleOpenDrawer = () => {
     drawerTriggerRef.current?.click();
@@ -174,20 +175,10 @@ export default function AgentBlocks(props: { imageUrl: string }) {
             </SheetContent>
           </Sheet>
         ) : (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              {/* Avatar becomes the button trigger */}
-              <Avatar className={`border ${navBorders} h-9 w-9 cursor-pointer`}>
-                <AvatarFallback>NU</AvatarFallback>
-                <AvatarImage src={imageUrl} />
-              </Avatar>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="center" side="right">
-              <DropdownMenuItem className={`border  ${navBorders}`}>
-                <LogoutLink>Logout</LogoutLink>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <Avatar className={`border ${navBorders} h-9 w-9 `}>
+            {/* <AvatarFallback>NU</AvatarFallback> */}
+            <AvatarImage src={imageUrl} />
+          </Avatar>
         )}
 
         <div className="flex-1 flex justify-between mx-2 md:justify-center md:mx-0">
@@ -400,15 +391,20 @@ export default function AgentBlocks(props: { imageUrl: string }) {
       <div className="md:grid md:grid-cols-2 md:mt-2">
         {/* QA BLOCK */}
         <div className="h-full md:flex md:flex-col rounded-[10px]">
-          <div className="grid grid-rows-[3px_min-content_1fr_min-content] md:grid-rows-[3px_min-content_1fr] h-full md:mb-[50px] mx-[10px] rounded-sm gap-7 bg-gray-400/30 border border-black">
+          <div className="grid grid-rows-[min-content_min-content_1fr_min-content] md:grid-rows-[min-content_min-content_1fr] h-full md:mb-[50px] mx-[10px] rounded-sm bg-gray-400/30 border border-black">
             {/* 1 */}
             {response ? (
-              <NavBarThree questionCount={questionCount} />
+              <NavBarThree
+                questionCount={questionCount}
+                isLoading={isLoading}
+                className=""
+              />
             ) : (
               <Button
-                className={`border  m-[20px] ${blockFill} ${textColor} ${navBorders}`}
+                className={`border m-[20px] ${blockFill} ${textColor} ${navBorders}`}
                 variant="outline"
                 onClick={async () => {
+                  setIsLoading(true);
                   const startMessage = [
                     {
                       id: messages.length.toString(),
@@ -429,16 +425,24 @@ export default function AgentBlocks(props: { imageUrl: string }) {
                   // console.log(json);
                   setResponse(json);
                   setQuestionCount((prevCount) => prevCount + 1);
+                  setIsLoading(false);
                 }}
+                disabled={isLoading}
               >
-                Start
+                {isLoading ? (
+                  <>
+                    <Loader className="mr-2 size-4 animate-spin" /> Please Wait
+                  </>
+                ) : (
+                  "Start"
+                )}
               </Button>
             )}
 
             {/* 2 */}
             {response && (
               <div
-                className={`border border-black flex flex-col justify-between rounded-sm mx-[20px] mt-[10px] ${blockFill} overflow-auto`}
+                className={`border border-black flex flex-col justify-between rounded-sm mx-[20px] mt-[10px] mb-7 ${blockFill} overflow-auto`}
               >
                 <p className="m-2">{response && response.question}</p>
               </div>
@@ -494,7 +498,7 @@ export default function AgentBlocks(props: { imageUrl: string }) {
                               setSelectedChoice(null);
                             };
                             if (key === response.rightChoice) {
-                              // console.log("correct");
+                              setIsLoading(true);
                               toast("Good Job!", {
                                 icon: "👏",
                                 style: {
@@ -504,6 +508,7 @@ export default function AgentBlocks(props: { imageUrl: string }) {
                                 },
                               });
                               await fetchNextQuestion();
+                              setIsLoading(false);
                             } else {
                               toast("Oops try again, click hint 😉", {
                                 // icon: "🤡",
@@ -515,6 +520,7 @@ export default function AgentBlocks(props: { imageUrl: string }) {
                               });
                             }
                           }}
+                          disabled={isLoading}
                         >
                           {`${key}.) ${choice}`}
                         </Button>
@@ -583,6 +589,7 @@ export default function AgentBlocks(props: { imageUrl: string }) {
                   className={`border ${navBorders} ${blockFill}`}
                   variant="outline"
                   onClick={async () => {
+                    setIsLoading(true);
                     const startMessage = [
                       {
                         id: messages.length.toString(),
@@ -604,7 +611,9 @@ export default function AgentBlocks(props: { imageUrl: string }) {
                     setResponse(json);
                     setQuestionCount((prevCount) => prevCount + 1);
                     setSelectedChoice(null);
+                    setIsLoading(false);
                   }}
+                  disabled={isLoading}
                 >
                   Next
                 </Button>

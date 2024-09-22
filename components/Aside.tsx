@@ -1,11 +1,12 @@
 "use client";
 
-import { CircleChevronLeft, CircleChevronRight } from "lucide-react";
+import { CircleChevronLeft, CircleChevronRight, LogOut } from "lucide-react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import SideBarButton from "./SideBarButton";
 import { ITEMS } from "@/constants";
+import { LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
 
 const Aside = () => {
   const [collapsed, setCollapsed] = useState(true);
@@ -50,13 +51,13 @@ const Aside = () => {
           )}
         </button>
         <div className="flex flex-col justify-between h-full ">
-          <div className="mt-[10px] flex flex-col gap-1 mx-2  ">
+          <div className="my-[10px] flex h-full flex-col gap-1 mx-2  ">
             {ITEMS.links.map((link, idx) => (
               <Link key={idx} href={link.href!}>
                 <SideBarButton
                   variant="ghost"
                   icon={link.icon}
-                  className={` ${
+                  className={`${
                     !collapsed
                       ? "gap-2 justify-normal w-32"
                       : "w-full hover:ml-1"
@@ -66,6 +67,17 @@ const Aside = () => {
                 </SideBarButton>
               </Link>
             ))}
+            <LogoutLink className="mt-auto ">
+              <SideBarButton
+                variant="ghost"
+                icon={LogOut}
+                className={`${
+                  !collapsed ? "gap-2 justify-normal w-32" : "w-full hover:ml-1"
+                }`}
+              >
+                {!collapsed && "Logout"}
+              </SideBarButton>
+            </LogoutLink>
           </div>
         </div>
       </aside>
