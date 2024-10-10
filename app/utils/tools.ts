@@ -29,6 +29,6 @@ export const searchWebTool = (query: string ) => {
   const context = tvly.searchContext(query, {
     searchDepth: "advanced"
   });
-  console.log(context)
+  // console.log(context)
   return context
 }

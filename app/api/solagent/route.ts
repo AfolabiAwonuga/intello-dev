@@ -30,8 +30,10 @@ export async function POST(req: Request) {
               },
             }),
           },
+        maxSteps: 2
     })
     // console.log(messages)
+    // console.log(result.response)
 
     return result.toDataStreamResponse()
 }

@@ -106,7 +106,7 @@ export default function AgentBlocks(props: { imageUrl: string }) {
         content: `I am a problem solver, i love to teach and can break things down to a level anyone can understand. My task is to solve the MCQ problems given to me, teach my solution, and engage in an educational conversation about the problem.`,
       },
     ],
-    maxSteps: 2,
+    // maxSteps: 2,
     // streamProtocol: "text",
   });
   // console.log(messages);
@@ -642,64 +642,92 @@ export default function AgentBlocks(props: { imageUrl: string }) {
                 className="h-[500px] overflow-y-auto"
               >
                 <div ref={messagesRef}>
-                  {messages.map((message) => (
-                    <motion.div
-                      key={message.id}
-                      layout
-                      initial={{ opacity: 0, scale: 1, y: 50, x: 0 }}
-                      animate={{ opacity: 1, scale: 1, y: 0, x: 0 }}
-                      exit={{ opacity: 0, scale: 1, y: 1, x: 0 }}
-                      // transition={{
-                      //   opacity: { duration: 0.1 },
-                      //   layout: {
-                      //     type: "spring",
-                      //     bounce: 0.3,
-                      //     duration: messages.indexOf(message) * 0.05 + 0.2,
-                      //   },
-                      // }}
-                      style={{
-                        originX: 0.5,
-                        originY: 0.5,
-                      }}
-                      className={cn(
-                        "flex flex-col gap-2 py-16 pt-0 pr-6 whitespace-pre-wrap",
-                        message.role === "user" ? "items-end" : "items-start"
-                      )}
-                    >
-                      <div key={message.id} className="flex gap-2">
-                        {message.role !== "user" && (
-                          <>
-                            <span
-                              className={`flex ${blockFill} p-2 rounded-[10px] max-w-lg text-sm border border-black`}
-                            >
-                              <Markdown
-                                remarkPlugins={[remarkGfm]}
-                                className="p"
-                              >
-                                {message.content}
-                              </Markdown>
-                              {/* <p>{message.content}</p> */}
-                            </span>
-                          </>
-                        )}
-                        {message.role === "user" && (
-                          <>
-                            <span
-                              className={`flex ${blockFill} p-2 rounded-[10px] max-w-md text-sm border border-black`}
-                            >
-                              <p>{message.content}</p>
-                            </span>
-                            <Avatar
-                              className={`h-9 w-9 flex justify-center items-center  border ${navBorders}`}
-                            >
-                              <AvatarFallback>DF</AvatarFallback>
-                              <AvatarImage src={imageUrl} />
-                            </Avatar>
-                          </>
-                        )}
+                  {messages.map(
+                    (message) =>
+                      message.content && (
+                        <motion.div
+                          key={message.id}
+                          layout
+                          initial={{ opacity: 0, scale: 1, y: 50, x: 0 }}
+                          animate={{ opacity: 1, scale: 1, y: 0, x: 0 }}
+                          exit={{ opacity: 0, scale: 1, y: 1, x: 0 }}
+                          // transition={{
+                          //   opacity: { duration: 0.1 },
+                          //   layout: {
+                          //     type: "spring",
+                          //     bounce: 0.3,
+                          //     duration: messages.indexOf(message) * 0.05 + 0.2,
+                          //   },
+                          // }}
+                          style={{
+                            originX: 0.5,
+                            originY: 0.5,
+                          }}
+                          className={cn(
+                            "flex flex-col py-7 pt-0 pr-6 whitespace-pre-wrap",
+                            message.role === "user"
+                              ? "items-end"
+                              : "items-start"
+                          )}
+                        >
+                          <div key={message.id} className="flex gap-2">
+                            {(message.role === "assistant" ||
+                              message.role === "system") && (
+                              <>
+                                <span
+                                  className={`flex ${blockFill} p-2 rounded-[10px] max-w-lg text-sm border border-black`}
+                                >
+                                  <Markdown
+                                    remarkPlugins={[remarkGfm]}
+                                    className="markdown-content"
+                                    components={{
+                                      a: ({
+                                        href,
+                                        children,
+                                      }: JSX.IntrinsicElements["a"]) => (
+                                        <Link
+                                          href={href ?? "#"}
+                                          target="_blank"
+                                          rel="noreferrer"
+                                          className="text-blue-500 hover:text-blue-700"
+                                        >
+                                          {children}
+                                        </Link>
+                                      ),
+                                    }}
+                                  >
+                                    {message.content}
+                                  </Markdown>
+                                </span>
+                              </>
+                            )}
+                            {message.role === "user" && (
+                              <>
+                                <span
+                                  className={`flex ${blockFill} p-2 rounded-[10px] max-w-md text-sm border border-black`}
+                                >
+                                  <p>{message.content}</p>
+                                </span>
+                                <Avatar
+                                  className={`h-9 w-9 flex justify-center items-center  border ${navBorders}`}
+                                >
+                                  <AvatarFallback>DF</AvatarFallback>
+                                  <AvatarImage src={imageUrl} />
+                                </Avatar>
+                              </>
+                            )}
+                          </div>
+                        </motion.div>
+                      )
+                  )}
+                  {chatEndpointIsLoading && (
+                    <div className="flex justify-start">
+                      <div className="flex py-16 pt-0 pr-6 whitespace-pre-wrap">
+                        {/* <p className="text-sm">Thinking...</p> */}
+                        <Loader className="mr-2 size-4 animate-spin" />{" "}
                       </div>
-                    </motion.div>
-                  ))}
+                    </div>
+                  )}
                 </div>
               </ScrollArea>
             </CardContent>
