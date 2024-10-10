@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { ThemeToggle } from "./ThemeToggle";
 import { useTheme } from "next-themes";
+import { Badge } from "./ui/badge";
 
 const ToggleNav = () => {
   const { theme, resolvedTheme } = useTheme();
@@ -21,9 +22,10 @@ const ToggleNav = () => {
 
   return (
     <nav className=" ml-[8px] rounded-[10px] h-[50px] flex items-center">
-      <p className="ml-1 text-sm md:text-md">
+      <Badge>Experimental</Badge>
+      {/* <p className="ml-1 text-sm md:text-md">
         <strong>IntelloDev</strong>
-      </p>
+      </p> */}
       <div className="ml-auto mr-1">
         <ThemeToggle borderColor={navBorders} />
       </div>

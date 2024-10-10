@@ -1,7 +1,11 @@
+import { searchWebTool } from "@/app/utils/tools";
 import { createOpenAI, openai } from "@ai-sdk/openai";
-import { convertToCoreMessages, streamText } from "ai";
+import { convertToCoreMessages, streamText, tool } from "ai";
+import {z} from "zod"
 
 export const maxDuration = 30;
+
+
 
 export async function POST(req: Request) {
     // const groq = createOpenAI({
@@ -13,10 +17,19 @@ export async function POST(req: Request) {
     // const {field} = 
 
     const result = await streamText({
-        // model: groq("mixtral-8x7b-32768"),
         model: openai('gpt-4-turbo'),
- 
         messages: convertToCoreMessages(messages),
+        tools: {
+            getInformation: tool({
+              description: `get information from your knowledge base to answer questions.`,
+              parameters: z.object({
+                query: z.string().describe("the users query"),
+              }),
+              execute: async ({ query }) => {
+                return searchWebTool(query);
+              },
+            }),
+          },
     })
     // console.log(messages)
 

@@ -106,6 +106,7 @@ export default function AgentBlocks(props: { imageUrl: string }) {
         content: `I am a problem solver, i love to teach and can break things down to a level anyone can understand. My task is to solve the MCQ problems given to me, teach my solution, and engage in an educational conversation about the problem.`,
       },
     ],
+    maxSteps: 2,
     // streamProtocol: "text",
   });
   // console.log(messages);
@@ -410,7 +411,7 @@ export default function AgentBlocks(props: { imageUrl: string }) {
                       id: messages.length.toString(),
                       content: `Start Quiz on ${
                         topic || `a random topic in ${field}`
-                      }`,
+                      }. Ensure to not repeat questions`,
                       role: "user",
                     },
                   ];
@@ -475,7 +476,7 @@ export default function AgentBlocks(props: { imageUrl: string }) {
                                   id: messages.length.toString(),
                                   content: `Start Quiz on ${
                                     topic || `a random topic in ${field}`
-                                  }`,
+                                  }. Ensure to not repeat questions`,
                                   role: "user",
                                 },
                               ];

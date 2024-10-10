@@ -9,13 +9,16 @@ import {
     HumanMessage,
     SystemMessage,
   } from "@langchain/core/messages";
-  import {Annotation, END, MessagesAnnotation, messagesStateReducer, START, StateGraph} from "@langchain/langgraph"
+import {Annotation, END, MessagesAnnotation, MemorySaver, START, StateGraph} from "@langchain/langgraph"
 import {openai} from "@ai-sdk/openai"
-import { GeneratedQuestions, generatedQuestionSchema } from "@/tools";
+import { GeneratedQuestions, generatedQuestionSchema, critiqueResponseSchema } from "@/app/utils/tools";
 import { ToolNode } from "@langchain/langgraph/prebuilt";
-import { qaPromptTemplate } from "./prompts";
+import { qaPromptTemplate } from "../../utils/prompts";
 import { tool } from "@langchain/core/tools";
 import { createReactAgent } from "@langchain/langgraph/prebuilt";
+import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
+import { graph } from "@/app/utils/agentGraph";
+
 
 
 function formatQaPrompt(field: string): string {
@@ -34,9 +37,11 @@ const vercelToLangMessage = (message: VercelChatMessage): BaseMessage => {
 
 const langToVercelMessage = (message: BaseMessage) => {
     if (message._getType() === "ai") {
-      return {content: (message as AIMessage).tool_calls};
+      return {content: (message as AIMessage)};
     }
 }
+
+let questions: Array<string> = []
 
 
 export async function POST(req: NextRequest) {
@@ -50,63 +55,24 @@ export async function POST(req: NextRequest) {
           .map(vercelToLangMessage);
         const field = body.field
 
-        // Graph State
-        const GraphState = Annotation.Root({
-            ...MessagesAnnotation.spec,
+        // TODO: Dynamically pass thread_id
+        const config = { configurable: { thread_id: "conversation-num-1", field: `${field}` } };
+        const result = await graph.invoke(
+          { messages },
+          {...config}
+        );
+        const filteredMessages = result.messages.map(langToVercelMessage).filter(Boolean);
+        const lastMessage = filteredMessages[filteredMessages.length - 1];
+        // console.log(lastMessage.content.tool_calls[0].args)
 
-        })
-        
-        // Tools
-        // const toolNode = new ToolNode()
-        const finalResponseTool = tool(async () => "mocked value", {
-            name: "Response",
-            description: "Always respond to the user using this tool.",
-            schema: generatedQuestionSchema
-          })
-        
-        
-        // Model
-        const llm = new ChatOpenAI({
-            model: "gpt-4o",
-            temperature: 1
-        })
-        
-        
-        const callQagent = async (state: typeof GraphState.State) => {
-            const {messages} = state
-            const systemPrompt = {
-                role: "system",
-                content: formatQaPrompt(field)
-            }
-        
-            const llmWithTools = llm.bindTools([finalResponseTool]);      
-            const result = await llmWithTools.invoke([systemPrompt, ...messages]);
-            return { messages: [result] };
-          }
-          
-          
-          const workflow = new StateGraph(GraphState)
-            .addNode("agent", callQagent)
-            .addEdge(START, "agent")
-          //   .addNode("tools", toolNode)
-            .addEdge("agent", END)
-          
-          
-          const graph = workflow.compile();
-
-          const result = await graph.invoke(
-            { messages }
-     
-          );
-          // console.log(result.messages.map(langToVercelMessage).filter(Boolean)[0].content[0].args)
-
-          return NextResponse.json(
-            // result.generatedQuestion,
-            result.messages.map(langToVercelMessage).filter(Boolean)[0].content[0].args,
-            { status: 200 },
-          );
+        return NextResponse.json(
+          // result.generatedQuestion,
+          lastMessage.content.tool_calls[messages.length - 1].args,
+          { status: 200 },
+        );
 
         } catch (e: any) {
+            // console.error("Error in POST request:", e);
             return NextResponse.json({ error: e.message }, { status: e.status ?? 500 });
           }
         

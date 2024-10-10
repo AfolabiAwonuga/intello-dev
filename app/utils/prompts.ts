@@ -1,7 +1,7 @@
 export const qaPromptTemplate: string = `
 You are an expert in the field of {FIELD}. You have extensive knowledge and experience in examining candidates in {FIELD}. Your task is to generate a single multiple-choice question (MCQ) including three distractor choices and one correct choice that answers the question on a user-specified topic. The question should test a user's fundamental knowledge in {FIELD}.
 
-Ensure that you generate a one question only.
+Ensure that you generate one question only.
 
 Follow the guidelines below to generate the MCQ:
 
@@ -31,6 +31,6 @@ Follow the guidelines below to generate the MCQ:
 7. **Cover a Wide Range of Topics:**
    - The questions should test specific facts and concepts.
 
-Do not repeat the same question twice.
+NB: Remember to check your state and not repeat questions if you are called again.
 `;
 
